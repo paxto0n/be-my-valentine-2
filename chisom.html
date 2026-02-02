@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Will You Be My Valentine, Chisom? 💜</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Dancing Script', cursive;
+            overflow: hidden;
+            background: linear-gradient(45deg, #8B5A96, #A569BD, #BB8FCE, #D2B4DE);
+            background-size: 400% 400%;
+            animation: gradientShift 8s ease-in-out infinite;
+            height: 100vh;
+            position: relative;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        .background-text {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            font-family: 'Great Vibes', cursive;
+            font-size: 3vw;
+            color: rgba(255, 255, 255, 0.1);
+            z-index: 1;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        .love-text {
+            position: absolute;
+            white-space: nowrap;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100vw); }
+        }
+
+        .envelope-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 90vw;
+            height: 80vh;
+            max-width: 800px;
+            max-height: 600px;
+            z-index: 10;
+            perspective: 1000px;
+        }
+
+        .envelope {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #7B68EE, #9370DB, #8A2BE2);
+            border-radius: 15px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            cursor: pointer;
+            transition: all 0.5s ease;
+        }
+
+        .envelope:hover {
+            transform: scale(1.02);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
+        }
+
+        .envelope-flap {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 50%;
+            background: linear-gradient(135deg, #6A5ACD, #7B68EE);
+            clip-path: polygon(0 0, 100% 0, 50% 100%);
+            transform-origin: 50% 0;
+            transition: transform 1.5s cubic-bezier(0.4, 0.0, 0.2, 1);
+            z-index: 2;
+        }
+
+        .envelope.opened .envelope-flap {
+            transform: rotateX(-180deg);
+        }
+
+        .envelope-content {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, #E8D5FF, #F0E6FF, #F8F0FF);
+            border-radius: 15px;
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 1s ease 0.5s;
+            overflow: hidden;
+        }
+
+        .envelope.opened .envelope-content {
+            opacity: 1;
+            transform: scale(1);
+        }
+
+        .click-to-open {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 2.5rem;
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            animation: pulse 2s infinite;
+            z-index: 3;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: translate(-50%, -50%) scale(1); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+        }
+
+        .valentine-content {
+            position: relative;
+            padding: 2rem;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .question {
+            font-size: 3rem;
+            color: #6A5ACD;
+            margin-bottom: 3rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: fadeInUp 1s ease;
+        }
+
+        @keyframes fadeInUp {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        .buttons {
+            display: flex;
+            gap: 3rem;
+            margin-bottom: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            font-size: 1.8rem;
+            font-family: 'Dancing Script', cursive;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-yes {
+            background: linear-gradient(45deg, #FF69B4, #FFB6C1);
+            color: white;
+            transform: scale(1);
+        }
+
+        .btn-yes:hover, .btn-yes.growing {
+            transform: scale(1.2);
+            box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .btn-no {
+            background: linear-gradient(45deg, #DDA0DD, #E6E6FA);
+            color: #6A5ACD;
+            position: relative;
+        }
+
+        .score {
+            font-size: 1.5rem;
+            color: #6A5ACD;
+            margin: 1rem 0;
+        }
+
+        .balloon {
+            position: absolute;
+            width: 40px;
+            height: 60px;
+            border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+            cursor: pointer;
+            transition: transform 0.1s ease;
+            animation: sway 3s ease-in-out infinite;
+        }
+
+        @keyframes sway {
+            0%, 100% { transform: translateX(0) rotate(-5deg); }
+            50% { transform: translateX(10px) rotate(5deg); }
+        }
+
+        .balloon:hover {
+            transform: scale(1.1);
+        }
+
+        .sparkle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: radial-gradient(circle, #FFD700, #FFA500);
+            border-radius: 50%;
+            pointer-events: none;
+            animation: sparkleAnimation 1s ease-out forwards;
+        }
+
+        @keyframes sparkleAnimation {
+            0% { transform: scale(0) rotate(0deg); opacity: 1; }
+            100% { transform: scale(3) rotate(180deg); opacity: 0; }
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: #FF69B4;
+            animation: confettiFall 3s linear forwards;
+        }
+
+        @keyframes confettiFall {
+            0% { transform: translateY(-100vh) rotate(0deg); opacity: 1; }
+            100% { transform: translateY(100vh) rotate(720deg); opacity: 0; }
+        }
+
+        .final-message {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            border-radius: 20px;
+            font-size: 2rem;
+            color: #6A5ACD;
+            text-align: center;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            opacity: 0;
+            transform: translate(-50%, -50%) scale(0);
+            transition: all 0.5s ease;
+        }
+
+        .final-message.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        @media (max-width: 768px) {
+            .question { font-size: 2rem; }
+            .buttons { flex-direction: column; gap: 1.5rem; }
+            .btn { font-size: 1.5rem; }
+            .balloon { width: 30px; height: 45px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="background-text">
+        <div class="love-text" style="top: 10%; animation-delay: 0s;">I Love You ♥ I Love You ♥ I Love You ♥</div>
+        <div class="love-text" style="top: 30%; animation-delay: -5s;">I Love You ♥ I Love You ♥ I Love You ♥</div>
+        <div class="love-text" style="top: 50%; animation-delay: -10s;">I Love You ♥ I Love You ♥ I Love You ♥</div>
+        <div class="love-text" style="top: 70%; animation-delay: -15s;">I Love You ♥ I Love You ♥ I Love You ♥</div>
+        <div class="love-text" style="top: 90%; animation-delay: -20s;">I Love You ♥ I Love You ♥ I Love You ♥</div>
+    </div>
+
+    <div class="envelope-container">
+        <div class="envelope" id="envelope">
+            <div class="envelope-flap"></div>
+            <div class="click-to-open" id="clickToOpen">Click to Open 💜</div>
+            
+            <div class="envelope-content">
+                <div class="valentine-content">
+                    <h1 class="question">Chisom, will you be my Valentine?</h1>
+                    
+                    <div class="buttons">
+                        <button class="btn btn-yes" id="yesBtn">YES! 💕</button>
+                        <button class="btn btn-no" id="noBtn">No...</button>
+                    </div>
+                    
+                    <div class="score">Balloons Popped: <span id="scoreValue">0</span> 🎈</div>
+                    
+                    <div class="final-message" id="finalMessage">
+                        You make my heart soar like these balloons! 💕<br>
+                        Happy Valentine's Day, beautiful! 🌹
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let score = 0;
+        let envelopeOpened = false;
+        let finalMessageShown = false;
+
+        const envelope = document.getElementById('envelope');
+        const clickToOpen = document.getElementById('clickToOpen');
+        const yesBtn = document.getElementById('yesBtn');
+        const noBtn = document.getElementById('noBtn');
+        const scoreValue = document.getElementById('scoreValue');
+        const finalMessage = document.getElementById('finalMessage');
+
+        // Open envelope
+        envelope.addEventListener('click', function() {
+            if (!envelopeOpened) {
+                envelope.classList.add('opened');
+                clickToOpen.style.display = 'none';
+                envelopeOpened = true;
+                setTimeout(createBalloons, 1500);
+                setTimeout(createRandomSparkles, 2000);
+            }
+        });
+
+        // YES button - grows when clicked
+        yesBtn.addEventListener('click', function() {
+            this.classList.add('growing');
+            setTimeout(() => {
+                this.classList.remove('growing');
+                showFinalMessage();
+            }, 1000);
+        });
+
+        // NO button - moves around when hovered
+        noBtn.addEventListener('mouseenter', moveNoButton);
+        noBtn.addEventListener('touchstart', moveNoButton);
+
+        function moveNoButton() {
+            const container = document.querySelector('.valentine-content');
+            const containerRect = container.getBoundingClientRect();
+            const btnRect = noBtn.getBoundingClientRect();
+            
+            const maxX = containerRect.width - btnRect.width - 50;
+            const maxY = containerRect.height - btnRect.height - 50;
+            
+            const randomX = Math.random() * maxX;
+            const randomY = Math.random() * maxY;
+            
+            noBtn.style.position = 'absolute';
+            noBtn.style.left = randomX + 'px';
+            noBtn.style.top = randomY + 'px';
+            noBtn.style.transition = 'all 0.3s ease';
+        }
+
+        // Create balloons
+        function createBalloons() {
+            const colors = ['#FF69B4', '#FFB6C1', '#FF1493', '#FF6347', '#FFD700', '#98FB98', '#87CEEB', '#DDA0DD'];
+            
+            for (let i = 0; i < 15; i++) {
+                setTimeout(() => createBalloon(colors), i * 500);
+            }
+        }
+
+        function createBalloon(colors) {
+            const balloon = document.createElement('div');
+            balloon.className = 'balloon';
+            balloon.style.background = colors[Math.floor(Math.random() * colors.length)];
+            balloon.style.left = Math.random() * (window.innerWidth - 40) + 'px';
+            balloon.style.top = Math.random() * (window.innerHeight - 60) + 'px';
+            balloon.style.animationDelay = Math.random() * 3 + 's';
+            
+            balloon.addEventListener('click', function() {
+                popBalloon(this);
+            });
+            
+            document.body.appendChild(balloon);
+            
+            // Remove balloon after some time if not clicked
+            setTimeout(() => {
+                if (balloon.parentNode) {
+                    balloon.parentNode.removeChild(balloon);
+                }
+            }, 10000);
+        }
+
+        function popBalloon(balloon) {
+            score++;
+            scoreValue.textContent = score;
+            
+            // Create sparkles
+            createSparkles(balloon.offsetLeft + 20, balloon.offsetTop + 30);
+            
+            // Remove balloon
+            balloon.parentNode.removeChild(balloon);
+            
+            // Check for final surprise
+            if (score >= 10 && !finalMessageShown) {
+                showFinalMessage();
+            }
+            
+            // Create new balloon
+            setTimeout(() => {
+                const colors = ['#FF69B4', '#FFB6C1', '#FF1493', '#FF6347', '#FFD700', '#98FB98', '#87CEEB', '#DDA0DD'];
+                createBalloon(colors);
+            }, 1000);
+        }
+
+        function createSparkles(x, y) {
+            for (let i = 0; i < 8; i++) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = x + (Math.random() - 0.5) * 40 + 'px';
+                sparkle.style.top = y + (Math.random() - 0.5) * 40 + 'px';
+                sparkle.style.animationDelay = Math.random() * 0.3 + 's';
+                
+                document.body.appendChild(sparkle);
+                
+                setTimeout(() => {
+                    if (sparkle.parentNode) {
+                        sparkle.parentNode.removeChild(sparkle);
+                    }
+                }, 1000);
+            }
+        }
+
+        function createRandomSparkles() {
+            if (envelopeOpened) {
+                for (let i = 0; i < 3; i++) {
+                    setTimeout(() => {
+                        createSparkles(
+                            Math.random() * window.innerWidth,
+                            Math.random() * window.innerHeight
+                        );
+                    }, Math.random() * 2000);
+                }
+                setTimeout(createRandomSparkles, 5000);
+            }
+        }
+
+        function showFinalMessage() {
+            if (!finalMessageShown) {
+                finalMessageShown = true;
+                finalMessage.classList.add('show');
+                createConfetti();
+            }
+        }
+
+        function createConfetti() {
+            const colors = ['#FF69B4', '#FFB6C1', '#FF1493', '#FFD700', '#98FB98', '#87CEEB', '#DDA0DD'];
+            
+            for (let i = 0; i < 50; i++) {
+                setTimeout(() => {
+                    const confetti = document.createElement('div');
+                    confetti.className = 'confetti';
+                    confetti.style.background = colors[Math.floor(Math.random() * colors.length)];
+                    confetti.style.left = Math.random() * window.innerWidth + 'px';
+                    confetti.style.animationDelay = Math.random() * 2 + 's';
+                    
+                    document.body.appendChild(confetti);
+                    
+                    setTimeout(() => {
+                        if (confetti.parentNode) {
+                            confetti.parentNode.removeChild(confetti);
+                        }
+                    }, 3000);
+                }, i * 50);
+            }
+        }
+
+        // Prevent context menu on mobile
+        document.addEventListener('contextmenu', e => e.preventDefault());
+    </script>
+</body>
+</html>
